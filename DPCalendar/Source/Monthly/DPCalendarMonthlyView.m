@@ -102,6 +102,7 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
 }
 
 - (void) commonInit{
+    self.didSelectIntemWhenDateSelected = YES;
     self.processQueue = [[NSOperationQueue alloc] init];
     self.processQueue.maxConcurrentOperationCount = 4;
     self.maxEventsPerDay = 10;
@@ -301,14 +302,16 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
 - (void) reloadPagingViews {
     for (UICollectionView *collectionView in self.pagingViews) {
         [collectionView reloadData];
-        
-        NSDate *thisMonth = [self.pagingMonths objectAtIndex:1];
-        if ((collectionView == [self.pagingViews objectAtIndex:1]) && self.selectedDate && ([[self firstVisibleDateOfMonth:thisMonth] compare:self.selectedDate] == NSOrderedAscending) && ([[self lastVisibleDateOfMonth:thisMonth] compare:self.selectedDate] == NSOrderedDescending)) {
-            
-            NSIndexPath *indexPath = [self indexPathForCurrentMonthWithDate:self.selectedDate];
-            if ([self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
-                [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionCenteredVertically];
-                [self collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+
+        if (self.didSelectIntemWhenDateSelected){
+            NSDate *thisMonth = [self.pagingMonths objectAtIndex:1];
+            if ((collectionView == [self.pagingViews objectAtIndex:1]) && self.selectedDate && ([[self firstVisibleDateOfMonth:thisMonth] compare:self.selectedDate] == NSOrderedAscending) && ([[self lastVisibleDateOfMonth:thisMonth] compare:self.selectedDate] == NSOrderedDescending)) {
+
+                NSIndexPath *indexPath = [self indexPathForCurrentMonthWithDate:self.selectedDate];
+                if ([self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
+                    [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionCenteredVertically];
+                    [self collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+                }
             }
         }
     }
@@ -547,8 +550,10 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
         NSIndexPath *indexPath = [self indexPathForCurrentMonthWithDate:date];
         UICollectionView *collectionView = (UICollectionView *)[self.pagingViews objectAtIndex:1];
         [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionCenteredVertically];
-        if ([self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
-            [self collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+        if (self.didSelectIntemWhenDateSelected) {
+            if ([self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
+                [self collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+            }
         }
     }];
 }
