@@ -10,8 +10,8 @@
 
 @implementation NSDate (DP)
 
-+ (int) monthsDifferenceBetweenStartDate:(NSDate *)startDate endDate:(NSDate *)endDate {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
++ (int)dp_monthsDifferenceBetweenStartDate:(NSDate *)startDate endDate:(NSDate *)endDate {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
     
     NSDateComponents *startDateComponents = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:startDate];
     NSDateComponents *endDateComponents = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:endDate];
@@ -24,7 +24,7 @@
     return yearOfEndDate * 12 + monthOfEndDate - (yearOfStartDate * 12 + monthOfStartDate);
 }
 
-- (NSDate *)dateByAddingYears:(int)years months:(int)months days:(int)days {
+- (NSDate *)dp_dateByAddingYears:(int)years months:(int)months days:(int)days {
     NSDateComponents* dateComponents = [[NSDateComponents alloc]init];
     [dateComponents setYear:years];
     [dateComponents setMonth:months];

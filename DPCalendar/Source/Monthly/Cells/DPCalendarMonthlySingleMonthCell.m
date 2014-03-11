@@ -173,7 +173,7 @@
         }
         
         
-        NSDate *tomorrow = [self.date dateByAddingYears:0 months:0 days:1];
+        NSDate *tomorrow = [self.date dp_dateByAddingYears:0 months:0 days:1];
         BOOL isEventEndedToday = [event.endTime compare:tomorrow] == NSOrderedAscending;
         BOOL isEventStartToday = !([event.startTime compare:day] == NSOrderedAscending) || ([event.startTime compare:day] == NSOrderedAscending && [self.date isEqualToDate:self.firstVisiableDateOfMonth]);
         
