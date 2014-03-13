@@ -165,7 +165,13 @@
         
         NSDate *day = self.date;
         
-        UIColor *color = [self.eventColors objectAtIndex:event.colorIndex % self.eventColors.count];
+        UIColor *color;
+        if (event.color) {
+            color = event.color;
+        }
+        else {
+            color = [self.eventColors objectAtIndex:event.colorIndex % self.eventColors.count];
+        }
         
         if (event.rowIndex == 0 || ((event.rowIndex + 2) * self.rowHeight  > rect.size.height)) {
             eventsNotShowingCount++;
@@ -182,7 +188,7 @@
         
         if (self.eventDrawingStyle == DPCalendarMonthlyViewEventDrawingStyleBar) {
             //Draw Bar
-            [self drawCellWithColor:[color colorWithAlphaComponent:0.2] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
+            [self drawCellWithColor:[color colorWithAlphaComponent:0.5f] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
         } else {
             //Draw Underline
             [self drawCellWithColor:color InRect:CGRectMake(startPosition, (event.rowIndex + 1) * self.rowHeight, width, 0.5f) context:context];

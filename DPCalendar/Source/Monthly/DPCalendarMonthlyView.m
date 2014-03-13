@@ -281,8 +281,8 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
         [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
                          fromDate:date];
 
-        int daysInWeek = self.daysInWeek;
-        int daysDifference = -1 * ((components.weekday - self.startDayOfWeek - 1) % daysInWeek);
+        NSUInteger daysInWeek = self.daysInWeek;
+        NSUInteger daysDifference = -1 * ((components.weekday - self.startDayOfWeek - 1) % daysInWeek);
         return [[date dp_dateWithDay:(daysDifference > 0) ? (daysDifference - self.daysInWeek) : daysDifference calendar:self.calendar] dateByAddingTimeInterval:DP_DAY];
     }
 }
@@ -295,9 +295,9 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
         [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
                          fromDate:date];
 
-        int daysInWeek = self.daysInWeek;
+        NSUInteger daysInWeek = self.daysInWeek;
 
-        int daysRemain = (daysInWeek + self.startDayOfWeek - 1) - ((components.weekday - 1) % daysInWeek);
+        NSUInteger daysRemain = (daysInWeek + self.startDayOfWeek - 1) - ((components.weekday - 1) % daysInWeek);
         daysRemain = daysRemain == 7 ? 0 : daysRemain;
         return
         [date dp_dateWithDay:components.day + daysRemain
@@ -559,7 +559,7 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
     [self scrollToMonth:date complete:^{
         NSIndexPath *indexPath = [self indexPathForCurrentMonthWithDate:date];
         UICollectionView *collectionView = (UICollectionView *)[self.pagingViews objectAtIndex:1];
-        [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionCenteredVertically];
+        [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
         if (self.didSelectIntemWhenDateSelected) {
             if ([self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
                 [self collectionView:collectionView didSelectItemAtIndexPath:indexPath];

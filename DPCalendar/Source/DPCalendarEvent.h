@@ -15,8 +15,11 @@
 @property (nonatomic, strong) NSDate *endTime;
 
 @property (nonatomic) uint colorIndex;
+@property (nonatomic, strong) UIColor *color;
 
 @property (nonatomic, assign) uint rowIndex;
 
 -(id)initWithTitle:(NSString *)title startTime:(NSDate *)startTime endTime:(NSDate *)endTime colorIndex:(uint)colorIndex;
+-(id)initWithTitle:(NSString *)title startTime:(NSDate *)startTime endTime:(NSDate *)endTime color:(UIColor *)color;
+
 @end
