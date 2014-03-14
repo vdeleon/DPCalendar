@@ -188,7 +188,7 @@
         
         if (self.eventDrawingStyle == DPCalendarMonthlyViewEventDrawingStyleBar) {
             //Draw Bar
-            [self drawCellWithColor:[color colorWithAlphaComponent:0.5f] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
+            [self drawCellWithColor:[color colorWithAlphaComponent:0.3f] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
         } else {
             //Draw Underline
             [self drawCellWithColor:color InRect:CGRectMake(startPosition, (event.rowIndex + 1) * self.rowHeight, width, 0.5f) context:context];
