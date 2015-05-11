@@ -16,11 +16,11 @@
     NSDateComponents *startDateComponents = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:startDate];
     NSDateComponents *endDateComponents = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit fromDate:endDate];
     
-    int yearOfStartDate = startDateComponents.year;
-    int monthOfStartDate = startDateComponents.month;
+    int yearOfStartDate = (int)startDateComponents.year;
+    int monthOfStartDate = (int)startDateComponents.month;
     
-    int yearOfEndDate = endDateComponents.year;
-    int monthOfEndDate = endDateComponents.month;
+    int yearOfEndDate = (int)endDateComponents.year;
+    int monthOfEndDate = (int)endDateComponents.month;
     return yearOfEndDate * 12 + monthOfEndDate - (yearOfStartDate * 12 + monthOfStartDate);
 }
 
