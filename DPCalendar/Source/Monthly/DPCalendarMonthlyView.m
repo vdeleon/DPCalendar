@@ -281,7 +281,7 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
         [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
                          fromDate:date];
 
-        int daysInWeek = self.daysInWeek;
+        int daysInWeek = (int)self.daysInWeek;
         int daysDifference = -1 * ((components.weekday - self.startDayOfWeek - 1) % daysInWeek);
         return [[date dp_dateWithDay:(daysDifference > 0) ? (daysDifference - self.daysInWeek) : daysDifference calendar:self.calendar] dateByAddingTimeInterval:DP_DAY];
     }
@@ -295,7 +295,7 @@ NSString *const DPCalendarViewDayCellIdentifier = @"DPCalendarViewDayCellIdentif
         [self.calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
                          fromDate:date];
 
-        int daysInWeek = self.daysInWeek;
+        int daysInWeek = (int)self.daysInWeek;
 
         int daysRemain = (daysInWeek + self.startDayOfWeek - 1) - ((components.weekday - 1) % daysInWeek);
         daysRemain = daysRemain == 7 ? 0 : daysRemain;
