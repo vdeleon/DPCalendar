@@ -97,15 +97,24 @@
     NSDateComponents *components =
     [self.calendar components:NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit
                 fromDate:self.date];
-    NSString *dayString = [NSString stringWithFormat:@"%d", components.day];
-    float dayWidth = [dayString boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, self.dayFont.pointSize + 1)
-                                               options:NSStringDrawingUsesLineFragmentOrigin
-                                            attributes:@{
-                                                         NSFontAttributeName: [UIFont systemFontOfSize:self.dayFont.pointSize]
-                                                         } context:stringContext].size.width;
+    NSString *dayString = [NSString stringWithFormat:@"%ld", (long)components.day];
+    float dayWidth;
 
-    [dayString drawInRect:CGRectMake(size.width - dayWidth - DAY_TEXT_RIGHT_MARGIN, (self.rowHeight - self.dayFont.pointSize) / 2, dayWidth, self.dayFont.pointSize) withAttributes:@{NSFontAttributeName:self.dayFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:isDayToday ? [UIColor whiteColor] : self.dayTextColor}];
-    
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        // Load resources for iOS 6.1 or earlier //- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext *)context
+        dayWidth = [dayString sizeWithFont:[UIFont systemFontOfSize:self.dayFont.pointSize] constrainedToSize:CGSizeMake(CGFLOAT_MAX, self.dayFont.pointSize + 1)].width;
+
+        [dayString drawInRect:CGRectMake(size.width - dayWidth - DAY_TEXT_RIGHT_MARGIN, (self.rowHeight - self.dayFont.pointSize) / 2, dayWidth, self.dayFont.pointSize) withFont:self.dayFont lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
+    } else {
+        // Load resources for iOS 7 or later
+        dayWidth = [dayString boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, self.dayFont.pointSize + 1)
+                                           options:NSStringDrawingUsesLineFragmentOrigin
+                                        attributes:@{
+                                                     NSFontAttributeName: [UIFont systemFontOfSize:self.dayFont.pointSize]
+                                                     } context:stringContext].size.width;
+        [dayString drawInRect:CGRectMake(size.width - dayWidth - DAY_TEXT_RIGHT_MARGIN, (self.rowHeight - self.dayFont.pointSize) / 2, dayWidth, self.dayFont.pointSize) withAttributes:@{NSFontAttributeName:self.dayFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:isDayToday ? [UIColor whiteColor] : self.dayTextColor}];
+
+    }
     
     int eventsNotShowingCount = 0;
 
@@ -156,7 +165,13 @@
         
         NSDate *day = self.date;
         
-        UIColor *color = [self.eventColors objectAtIndex:event.colorIndex % self.eventColors.count];
+        UIColor *color;
+        if (event.color) {
+            color = event.color;
+        }
+        else {
+            color = [self.eventColors objectAtIndex:event.colorIndex % self.eventColors.count];
+        }
         
         if (event.rowIndex == 0 || ((event.rowIndex + 2) * self.rowHeight  > rect.size.height)) {
             eventsNotShowingCount++;
@@ -164,7 +179,7 @@
         }
         
         
-        NSDate *tomorrow = [self.date dateByAddingYears:0 months:0 days:1];
+        NSDate *tomorrow = [self.date dp_dateByAddingYears:0 months:0 days:1];
         BOOL isEventEndedToday = [event.endTime compare:tomorrow] == NSOrderedAscending;
         BOOL isEventStartToday = !([event.startTime compare:day] == NSOrderedAscending) || ([event.startTime compare:day] == NSOrderedAscending && [self.date isEqualToDate:self.firstVisiableDateOfMonth]);
         
@@ -173,7 +188,7 @@
         
         if (self.eventDrawingStyle == DPCalendarMonthlyViewEventDrawingStyleBar) {
             //Draw Bar
-            [self drawCellWithColor:[color colorWithAlphaComponent:0.2] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
+            [self drawCellWithColor:[color colorWithAlphaComponent:0.3f] InRect:CGRectMake(startPosition, event.rowIndex * self.rowHeight + ROW_MARGIN, width, self.rowHeight - ROW_MARGIN) context:context];
         } else {
             //Draw Underline
             [self drawCellWithColor:color InRect:CGRectMake(startPosition, (event.rowIndex + 1) * self.rowHeight, width, 0.5f) context:context];
@@ -185,7 +200,15 @@
             
             
             [[UIColor blackColor] set];
-            [event.title drawInRect:CGRectMake(startPosition + 2 +  EVENT_TITLE_MARGIN, event.rowIndex * self.rowHeight + ROW_MARGIN, rect.size.width - EVENT_END_MARGIN, self.rowHeight - ROW_MARGIN) withAttributes:@{NSFontAttributeName:self.eventFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:[UIColor colorWithRed:67/255.0f green:67/255.0f blue:67/255.0f alpha:1]}];
+            if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+                // Load resources for iOS 6.1 or earlier //- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext *)context
+                [event.title drawInRect:CGRectMake(startPosition + 2 +  EVENT_TITLE_MARGIN, event.rowIndex * self.rowHeight + ROW_MARGIN, rect.size.width - EVENT_END_MARGIN, self.rowHeight - ROW_MARGIN) withFont:self.eventFont lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
+            } else {
+                // Load resources for iOS 7 or later
+                [event.title drawInRect:CGRectMake(startPosition + 2 +  EVENT_TITLE_MARGIN, event.rowIndex * self.rowHeight + ROW_MARGIN, rect.size.width - EVENT_END_MARGIN, self.rowHeight - ROW_MARGIN) withAttributes:@{NSFontAttributeName:self.eventFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:[UIColor colorWithRed:67/255.0f green:67/255.0f blue:67/255.0f alpha:1]}];
+            }
+
+
         }
         
         
@@ -193,7 +216,14 @@
     }
     if (eventsNotShowingCount > 0) {
         //show more
-        [[NSString stringWithFormat:@"%d more...", eventsNotShowingCount] drawInRect:CGRectMake(5, (self.events.count - eventsNotShowingCount + 1) * self.rowHeight + 2, rect.size.width - 5, self.rowHeight - 2) withAttributes:@{NSFontAttributeName:self.eventFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:[UIColor colorWithRed:67/255.0f green:67/255.0f blue:67/255.0f alpha:1]}];
+        if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+            // Load resources for iOS 6.1 or earlier //- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext *)context
+            [[NSString stringWithFormat:@"%d more...", eventsNotShowingCount] drawInRect:CGRectMake(5, rect.size.height - self.rowHeight, rect.size.width - 5, self.rowHeight - 2) withFont:self.eventFont lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
+        } else {
+            // Load resources for iOS 7 or later
+            [[NSString stringWithFormat:@"%d more...", eventsNotShowingCount] drawInRect:CGRectMake(5, rect.size.height - self.rowHeight, rect.size.width - 5, self.rowHeight - 2) withAttributes:@{NSFontAttributeName:self.eventFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName:[UIColor colorWithRed:67/255.0f green:67/255.0f blue:67/255.0f alpha:1]}];
+        }
+
     }
     
     

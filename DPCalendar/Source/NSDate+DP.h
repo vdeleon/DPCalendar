@@ -16,9 +16,9 @@
 
 @interface NSDate (DP)
 
-+ (int) monthsDifferenceBetweenStartDate:(NSDate *)startDate endDate:(NSDate *)endDate;
++ (int)dp_monthsDifferenceBetweenStartDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
-- (NSDate *)dateByAddingYears:(int)years months:(int)months days:(int)days;
+- (NSDate *)dp_dateByAddingYears:(int)years months:(int)months days:(int)days;
 
 - (instancetype)dp_firstDateOfMonth:(NSCalendar *)calendar;
 
@@ -27,4 +27,5 @@
 - (instancetype)dp_dateWithDay:(NSUInteger)day calendar:(NSCalendar *)calendar;
 
 - (instancetype)dp_dateWithoutTimeWithCalendar:(NSCalendar *)calendar;
+
 @end

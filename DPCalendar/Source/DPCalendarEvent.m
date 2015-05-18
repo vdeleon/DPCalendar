@@ -21,4 +21,20 @@
     return self;
 }
 
+-(id)initWithTitle:(NSString *)title startTime:(NSDate *)startTime endTime:(NSDate *)endTime color:(UIColor *)color
+{
+    self = [super init];
+    if (self) {
+        _title = title;
+        _startTime = startTime;
+        _endTime = endTime;
+        _color = color;
+    }
+    return self;
+}
+
+-(NSString *)description {
+    return [NSString stringWithFormat:@"Title:%@, StartTime:%@, EndTime:%@, colorIndex:%d", self.title, self.startTime, self.endTime, self.colorIndex];
+}
+
 @end

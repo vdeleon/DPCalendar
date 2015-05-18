@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DPCalendarMonthlySingleMonthCell.h"
+#import "DPCalendarEvent.h"
 
 extern NSString *const DPCalendarMonthlyViewAttributeWeekdayHeight; //Height of weekday cell
 extern NSString *const DPCalendarMonthlyViewAttributeWeekdayFont; //Font of weekday
@@ -59,6 +60,9 @@ extern NSString *const DPCalendarMonthlyViewAttributeMonthRows; //A convenient f
 //Background Color for monthly scroll view
 @property(nonatomic, strong) UIColor *monthlyViewBackgroundColor;
 
+//Background Color for monthly scroll view
+@property(nonatomic) BOOL didSelectIntemWhenDateSelected;
+
 @property (nonatomic, weak) id<DPCalendarMonthlyViewDelegate> monthlyViewDelegate;
 
 - (void) setEvents:(NSArray *)events complete:(void (^)(void))complete;
@@ -74,5 +78,8 @@ extern NSString *const DPCalendarMonthlyViewAttributeMonthRows; //A convenient f
 - (NSDate *)lastVisibleDateOfMonth:(NSDate *)date;
 
 - (void) clickDate:(NSDate *)date;
+
+- (NSArray *)eventsForDay:(NSDate *)date;
+- (NSArray *)iconEventsForDay:(NSDate *)date;
 
 @end
